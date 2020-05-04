@@ -5,20 +5,25 @@
 #-------------------------------------------------
 
 INCLUDEPATH += /usr/local/restpp/include
-INCLUDEPATH += /usr/local/cuda/include
-INCLUDEPATH += /usr/local/cuda-10.0/include
 INCLUDEPATH += /usr/local/zed/include
-INCLUDEPATH += /home/user/opencv/include
+INCLUDEPATH += /usr/include/opencv4
+#INCLUDEPATH += /usr/local/cuda/include
+INCLUDEPATH += /usr/local/cuda-10.0/include
+
 LIBS += -L"/usr/local/restpp/lib"
 LIBS += -L"/usr/local/zed/lib"
-LIBS += -L"/usr/local/cuda/lib"
+#LIBS += -L"/usr/local/cuda/lib"
 LIBS += -L"/usr/local/cuda-10.0/lib"
+LIBS += -L"/usr/local/cuda/lib64"
+LIBS += -lsl_zed
 LIBS+= -lrestpp
 LIBS+= -lopencv_core
 LIBS+= -lopencv_highgui
 LIBS+= -lopencv_imgproc
+LIBS += -lcuda
+LIBS += -lcudart
 
-
+QMAKE_LFLAGS = -Wl,-rpath,/usr/local/cuda/lib64
 
 QT       += core gui
 QT += widgets
@@ -42,13 +47,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    remotecontrolwindow.cpp
+    remotecontrolwindow.cpp \
+    livevideowindow.cpp
 
 HEADERS += \
         mainwindow.h \
     remotecontrolwindow.h \
-    portablesleep.h
+    portablesleep.h \
+    livevideowindow.h
 
 FORMS += \
         mainwindow.ui \
-    remotecontrolwindow.ui
+    remotecontrolwindow.ui \
+    livevideowindow.ui

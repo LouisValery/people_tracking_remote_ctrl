@@ -10,10 +10,9 @@ using namespace restpp;
 
 
 
-
-
-RemoteControlWindow::RemoteControlWindow(QWidget *parent) :
+RemoteControlWindow::RemoteControlWindow(QMainWindow *parent) :
     QDialog(parent),
+    m_parent(parent),
     ui(new Ui::RemoteControlWindow)
 {
     ui->setupUi(this);
@@ -47,13 +46,20 @@ RemoteControlWindow::~RemoteControlWindow()
     delete ui;
 }
 
+void RemoteControlWindow::on_backPushButton_clicked()
+{
+    hide();
+    m_thread_started = false;
+    m_parent->show();
+}
+
 // Push button enable remote/disable control
 void RemoteControlWindow::on_pushButton_clicked()
 {
     if (!m_thread_started){
         m_get_robot_info_thread = std::thread(&RemoteControlWindow::get_robot_info, this);
         m_send_arrow_cmd_thread = std::thread(&RemoteControlWindow::publish_arrow_cmd, this);
-        m_display_live_thread = std::thread(&RemoteControlWindow::display_live_video, this);
+        // m_display_live_thread = std::thread(&RemoteControlWindow::display_live_video, this);
         m_thread_started = true;
     }
 
@@ -169,7 +175,7 @@ void RemoteControlWindow::timerEvent(QTimerEvent *e)
 
         // Display costmap + robot direction
         guardian.lock();
-//        ui->costmap_label->setPixmap(QPixmap::fromImage(m_costmap_image).scaled(260, 260));
+
         int image_width = 260;
         int image_height = 260;
 
@@ -192,8 +198,6 @@ void RemoteControlWindow::timerEvent(QTimerEvent *e)
 
         guardian.unlock();
     }
-    std::terminate();
-
 }
 
 
@@ -279,7 +283,7 @@ void RemoteControlWindow::get_robot_info(){
         m_costmap_image = QImage(my_costmap_image.data, my_costmap_image.cols, my_costmap_image.rows, my_costmap_image.step, QImage::Format_Indexed8);
         guardian.unlock();
     }
-    std::terminate();
+    //std::terminate();
 }
 
 void RemoteControlWindow::publish_arrow_cmd()
@@ -400,7 +404,7 @@ void RemoteControlWindow::display_live_video(){
 
     // Exit
     zed.close();
-    std::terminate();
+    // std::terminate();
 }
 
 EulerAngles RemoteControlWindow::ToEulerAngles(Quaternion q) {
@@ -426,3 +430,6 @@ EulerAngles RemoteControlWindow::ToEulerAngles(Quaternion q) {
 
     return angles;
 }
+
+
+

@@ -13,6 +13,7 @@
 #include <sl/Camera.hpp>
 
 //Qt
+#include <QMainWindow>
 #include <QDebug>
 #include <QKeyEvent>
 #include <QDialog>
@@ -21,7 +22,6 @@
 #include <QObject>
 #include <QApplication>
 #include <QTimer>
-#include <QThread>
 #include <QMutex>
 #include <QPainter>
 
@@ -52,13 +52,14 @@ class RemoteControlWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit RemoteControlWindow(QWidget *parent = 0);
+    explicit RemoteControlWindow(QMainWindow *parent);
     void enable_remote_control();
     void disable_remote_control();
     ~RemoteControlWindow();
 
 private slots:
     void on_pushButton_clicked();
+    void on_backPushButton_clicked();
 
 public slots:
     //threads functions
@@ -67,6 +68,8 @@ public slots:
     void display_live_video();
 
 private:
+    QMainWindow* m_parent;
+
     void connectSignalsSlots();
     EulerAngles ToEulerAngles(Quaternion q);
 

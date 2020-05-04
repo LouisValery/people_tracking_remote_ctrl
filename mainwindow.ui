@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="remoteButton">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -49,7 +49,7 @@ controle pannel</string>
      <string>People tracking</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="live_button">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -61,8 +61,17 @@ controle pannel</string>
     <property name="text">
      <string>Live</string>
     </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="map_button">
     <property name="geometry">
      <rect>
       <x>50</x>
