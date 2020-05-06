@@ -73,10 +73,10 @@ void LiveVideoWindow::display_live_video(){
 
     // Open the camera
      sl::ERROR_CODE zed_open_state = zed.open(init_parameters);
-//    if (zed_open_state != sl::ERROR_CODE::SUCCESS) {
+    if (zed_open_state != sl::ERROR_CODE::SUCCESS) {
 //        print("Camera Open", zed_open_state, "Exit program.");
 //        return sl::EXIT_FAILURE;
-//    }
+    }
     std::cout << "Open the camera ok" << std::endl;
 
     // Create a Mat to store images
@@ -115,5 +115,6 @@ void LiveVideoWindow::display_live_video(){
 
     // Exit
     zed.close();
+    std::terminate();
 }
 

@@ -59,7 +59,7 @@ void RemoteControlWindow::on_pushButton_clicked()
     if (!m_thread_started){
         m_get_robot_info_thread = std::thread(&RemoteControlWindow::get_robot_info, this);
         m_send_arrow_cmd_thread = std::thread(&RemoteControlWindow::publish_arrow_cmd, this);
-        // m_display_live_thread = std::thread(&RemoteControlWindow::display_live_video, this);
+        m_display_live_thread = std::thread(&RemoteControlWindow::display_live_video, this);
         m_thread_started = true;
     }
 
@@ -292,6 +292,7 @@ void RemoteControlWindow::publish_arrow_cmd()
         qDebug() << "entering while loop";
         std::string arrow_direction;
         bool key_received = false;
+
         /******************* Send arrow command to robot  *********************************/
         if(m_up_pressed && m_right_pressed && !m_left_pressed && !m_down_pressed){
             arrow_direction = " up_right ";
@@ -368,12 +369,12 @@ void RemoteControlWindow::display_live_video(){
     init_parameters.input.setFromStream(m_robot_ip);
 
     // Open the camera
-//    sl::ERROR_CODE zed_open_state = zed.open(init_parameters);
+    sl::ERROR_CODE zed_open_state = zed.open(init_parameters);
 //    if (zed_open_state != sl::ERROR_CODE::SUCCESS) {
 //        print("Camera Open", zed_open_state, "Exit program.");
 //        return sl::EXIT_FAILURE;
 //    }
-    cout << "Open the camera ok" << endl;
+    qDebug() << "Open the camera ok";
 
     // Create a Mat to store images
     sl::Mat zed_image;
@@ -382,6 +383,7 @@ void RemoteControlWindow::display_live_video(){
     //switchCameraSettings();
 
     // Capture new images until 'q' is pressed
+
     while (m_remote_control_enabled) {
         // Check that grab() is successful
         auto returned_state = zed.grab();
@@ -396,15 +398,16 @@ void RemoteControlWindow::display_live_video(){
             else
                 my_live_video_frame = cv::Mat((int) zed_image.getHeight(), (int) zed_image.getWidth(), CV_8UC4, zed_image.getPtr<sl::uchar1>(sl::MEM::CPU));
 
-        } else {
-//            print("Error during capture : ", returned_state);
+        }
+        else {
+            std::cout << "Error during capture, break" << std::endl;
             break;
         }
     }
 
     // Exit
     zed.close();
-    // std::terminate();
+    std::terminate();
 }
 
 EulerAngles RemoteControlWindow::ToEulerAngles(Quaternion q) {
